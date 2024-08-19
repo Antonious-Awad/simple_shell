@@ -15,37 +15,37 @@ void start_loop(char *shell_name, int *exit_code)
 	char **command;
 	pid_t pid;
 
-	readInputBuffer = getline(&inputBuffer, &read_len, stdin);
-
-	if (readInputBuffer == -1)
+	while ((readInputBuffer = getline(&inputBuffer, &read_len, stdin)) != -1)
 	{
-		exit_code = EXIT_FAILURE;
-		exit(EXIT_FAILURE);
+
+		if (readInputBuffer == -1)
+		{
+			*exit_code = EXIT_FAILURE;
+			exit(EXIT_FAILURE);
+		}
+
+		for (i = 0; inputBuffer[i] != '\n'; i++)
+			;
+
+		inputBuffer[i] = '\0';
+
+		command = tokenize(inputBuffer);
+		if (!command)
+			return;
+
+		pid = fork();
+		if (pid == -1)
+		{
+			*exit_code = EXIT_FAILURE;
+			exit(EXIT_FAILURE);
+		}
+		else if (pid == 0)
+		{
+			if (execve(command[0], command, environ) == -1)
+				perror(shell_name);
+		}
+		else
+			wait(&wait_status);
+		free(inputBuffer);
 	}
-
-	for (i = 0; inputBuffer[i] != '\n'; i++)
-		;
-
-	inputBuffer[i] = '\0';
-
-	command = tokenize(inputBuffer);
-	if (!command)
-		return;
-
-	pid = fork();
-
-	if (pid == -1)
-	{
-		*exit_code = EXIT_FAILURE;
-		exit(EXIT_FAILURE);
-	}
-	else if (pid == 0)
-	{
-		if (execve(command[0], command, environ) == -1)
-			perror(shell_name);
-	}
-	else
-		wait(&wait_status);
-
-	free(inputBuffer);
 }

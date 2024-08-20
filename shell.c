@@ -15,15 +15,20 @@ int main(int __attribute__((unused)) argc, char **argv)
 		isInteractive = 1;
 
 	if (isInteractive)
-		while (1)
-		{
-			_put_str("($) ");
-
-			start_loop(argv[0], &exit_code);
-		}
+		start_loop(argv[0], &exit_code);
 	else
 	{
-		start_loop(argv[0], &exit_code);
+		char **command;
+
+		command = get_command(&exit_code);
+		if (access(command[0], X_OK | F_OK) == -1)
+		{
+			perror("access err");
+			exit_code = EXIT_FAILURE;
+			exit(EXIT_FAILURE);
+		}
+
+		exec_command(command, argv[0], &exit_code);
 	}
 
 	return (exit_code);

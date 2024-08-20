@@ -12,5 +12,5 @@ void _free_dbl_ptr(char **ptr)
 	{
 		free(ptr[i++]);
 	}
-	free(ptr[i]);
+	free(ptr);
 }

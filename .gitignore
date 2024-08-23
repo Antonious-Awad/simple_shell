@@ -1,5 +1,7 @@
 .vscode
 *.bash
 /checks
+a.out
+test.c
 
 hsh

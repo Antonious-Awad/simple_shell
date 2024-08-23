@@ -12,9 +12,11 @@ int count_words(char *str)
 
 	for (i = 0; str[i] != '\0'; i++)
 	{
-		if (str[i] == ' ' || str[i + 1] == '\0')
+		/* (DELETE ME AFTER YOU READ) I added semicolon for the check e.x: /bin/ls; /bin/pwd */
+
+		if (str[i] == ' ' || str[i] == ';' || str[i + 1] == '\0')
 		{
-			if (str[i - 1] != ' ')
+			if (str[i - 1] != ' ' && str[i - 1] != ';')
 				counter++;
 		}
 	}
@@ -39,10 +41,10 @@ void allocate_memory(char **str_arr, int word_counter, char *str)
 		if (counter == word_counter)
 			return;
 
-		if (str[i] != ' ')
+		if (str[i] != ' ' && str[i] != ';')
 			word_len++;
 
-		if (str[i + 1] == ' ' || str[i + 1] == '\0')
+		if (str[i + 1] == ' ' || str[i + 1] == ';' || str[i + 1] == '\0')
 		{
 			str_arr[counter++] = malloc((word_len + 1) * sizeof(char));
 			word_len = 0;
@@ -75,10 +77,10 @@ char **tokenize(char *str)
 	allocate_memory(str_arr, word_counter, str);
 
 	for (i = 0; str[i] != '\0'; i++)
-		if (str[i] != ' ')
+		if (str[i] != ' ' && str[i] != ';')
 		{
 			str_arr[arr_itr][word_itr++] = str[i];
-			if (str[i + 1] == ' ' || str[i + 1] == '\0')
+			if (str[i + 1] == ' ' || str[i + 1] == ';' || str[i + 1] == '\0')
 			{
 				str_arr[arr_itr++][word_itr] = '\0';
 				word_itr = 0;

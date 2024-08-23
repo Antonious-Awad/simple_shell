@@ -30,17 +30,21 @@ char **get_command(int *exit_code)
 	readInputSize = getline(&inputBuffer, &read_len, stdin);
 	if (readInputSize == -1)
 	{
+		write(STDOUT_FILENO, '\n', 1);
+		if (inputBuffer)
+			free(inputBuffer);
 		*exit_code = EXIT_FAILURE;
 		exit(EXIT_FAILURE);
 	}
 
-	add_null(inputBuffer);
+	if (!inputBuffer)
+		return (NULL);
 
-	command = tokenize(inputBuffer);
+	add_null(inputBuffer);
+	command = tokenize(inputBuffer, ' ');
 
 	if (command == NULL || command[0] == NULL)
 		return (NULL);
-
 	free(inputBuffer);
 	return (command);
 }
@@ -88,6 +92,7 @@ void exec_command(char **command, char *shell_name, int *exit_code)
 void start_loop(char *shell_name, int *exit_code)
 {
 	char **command;
+	int isBuiltin;
 
 	while (1)
 	{
@@ -95,12 +100,16 @@ void start_loop(char *shell_name, int *exit_code)
 		command = get_command(exit_code);
 		if (command == NULL || command[0] == NULL)
 			continue;
-
-		if (access(command[0], X_OK | F_OK) == -1)
+		isBuiltin = handle_builtin(command);
+		if (isBuiltin == 1)
 		{
-			perror("access err");
+			_free_dbl_ptr(command);
 			continue;
 		}
-		exec_command(command, shell_name, exit_code);
+		if (access(command[0], X_OK | F_OK) == 0)
+		{
+			exec_command(command, shell_name, exit_code);
+			continue;
+		}
 	}
 }

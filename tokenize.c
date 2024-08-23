@@ -13,6 +13,7 @@ int count_words(char *str)
 	for (i = 0; str[i] != '\0'; i++)
 	{
 		/* (DELETE ME AFTER YOU READ) I added semicolon for the check e.x: /bin/ls; /bin/pwd */
+
 		if (str[i] == ' ' || str[i] == ';' || str[i + 1] == '\0')
 		{
 			if (str[i - 1] != ' ' && str[i - 1] != ';')

@@ -30,11 +30,10 @@ char **get_command(int *exit_code)
 	readInputSize = getline(&inputBuffer, &read_len, stdin);
 	if (readInputSize == -1)
 	{
-		write(STDOUT_FILENO, '\n', 1);
 		if (inputBuffer)
 			free(inputBuffer);
-		*exit_code = EXIT_FAILURE;
-		exit(EXIT_FAILURE);
+		*exit_code = EXIT_SUCCESS;
+		exit(EXIT_SUCCESS);
 	}
 
 	if (!inputBuffer)

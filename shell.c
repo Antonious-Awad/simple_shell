@@ -20,15 +20,19 @@ int main(int __attribute__((unused)) argc, char **argv)
 	{
 		char **command;
 
-		command = get_command(&exit_code);
-		if (access(command[0], X_OK | F_OK) == -1)
+		while ((command = get_command(&exit_code)) != NULL)
 		{
-			perror("access err");
-			exit_code = EXIT_FAILURE;
-			exit(EXIT_FAILURE);
+			if (access(command[0], X_OK | F_OK) == 0)
+			{
+				exec_command(command, argv[0], &exit_code);
+			}
+			else
+			{
+				fprintf(stderr, "%s: command not found\n", command[0]);
+				_free_dbl_ptr(command);
+				exit_code = 127;
+			}
 		}
-
-		exec_command(command, argv[0], &exit_code);
 	}
 
 	return (exit_code);

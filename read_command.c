@@ -30,20 +30,29 @@ char **get_command(int *exit_code)
 	readInputSize = getline(&inputBuffer, &read_len, stdin);
 	if (readInputSize == -1)
 	{
-		if (inputBuffer)
-			free(inputBuffer);
+		free(inputBuffer);
+		free(command);
 		*exit_code = EXIT_SUCCESS;
 		exit(EXIT_SUCCESS);
 	}
 
 	if (!inputBuffer)
+	{
+		free(inputBuffer);
+		_free_dbl_ptr(command);
 		return (NULL);
+	}
 
 	add_null(inputBuffer);
 	command = tokenize(inputBuffer, ' ');
 
 	if (command == NULL || command[0] == NULL)
+	{
+		free(inputBuffer);
+		_free_dbl_ptr(command);
 		return (NULL);
+	}
+
 	free(inputBuffer);
 	return (command);
 }
@@ -77,7 +86,6 @@ void exec_command(char **command, char *shell_name, int *exit_code)
 	else
 	{
 		wait(&wait_status);
-		_free_dbl_ptr(command);
 	}
 }
 
@@ -91,7 +99,7 @@ void exec_command(char **command, char *shell_name, int *exit_code)
 void start_loop(char *shell_name, int *exit_code)
 {
 	char **command;
-	int isBuiltin;
+	int isBuiltin, isInPath;
 
 	while (1)
 	{
@@ -101,6 +109,12 @@ void start_loop(char *shell_name, int *exit_code)
 			continue;
 		isBuiltin = handle_builtin(command);
 		if (isBuiltin == 1)
+		{
+			_free_dbl_ptr(command);
+			continue;
+		}
+		isInPath = is_in_path(command, exit_code, shell_name);
+		if (isInPath)
 		{
 			_free_dbl_ptr(command);
 			continue;

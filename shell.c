@@ -1,4 +1,47 @@
 #include "shell.h"
+
+/**
+ * non_interactive - handling non-interactive mode
+ * @shell_name: name of the shell to print
+ * @exit_code: pointer to exit code variable
+ */
+
+void non_interactive(char *shell_name, int *exit_code)
+{
+	char **command;
+	int isBuiltin, isInPath;
+
+	while ((command = get_command(exit_code)) != NULL)
+	{
+		if (command == NULL || command[0] == NULL)
+		{
+			exit(EXIT_SUCCESS);
+		}
+		isBuiltin = handle_builtin(command);
+		if (isBuiltin == 1)
+		{
+			_free_dbl_ptr(command);
+			exit(EXIT_SUCCESS);
+		}
+		isInPath = is_in_path(command, exit_code, shell_name);
+		if (isInPath)
+		{
+			_free_dbl_ptr(command);
+			exit(EXIT_SUCCESS);
+		}
+		if (access(command[0], X_OK | F_OK) == 0)
+		{
+			exec_command(command, shell_name, exit_code);
+		}
+		else
+		{
+			not_found(command[0]);
+			_free_dbl_ptr(command);
+		}
+		_free_dbl_ptr(command);
+	}
+	_free_dbl_ptr(command);
+}
 /**
  * main - Entry point for the shell application
  * @argc: arguments counter
@@ -18,23 +61,7 @@ int main(int __attribute__((unused)) argc, char **argv)
 		start_loop(argv[0], &exit_code);
 	else
 	{
-		char **command;
-
-		while ((command = get_command(&exit_code)) != NULL)
-		{
-			if (access(command[0], X_OK | F_OK) == 0)
-			{
-				exec_command(command, argv[0], &exit_code);
-			}
-			else
-			{
-				fprintf(stderr, "%s: command not found\n", command[0]);
-				_free_dbl_ptr(command);
-				exit_code = 127;
-			}
-			_free_dbl_ptr(command);
-		}
-		_free_dbl_ptr(command);
+		non_interactive(argv[0], &exit_code);
 		return (0);
 	}
 

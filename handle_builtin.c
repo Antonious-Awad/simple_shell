@@ -11,6 +11,23 @@ void exit_shell(char **command)
 }
 
 /**
+ * print_env - prints the enviornment variables
+ * @command: command with its arguments
+ */
+void print_env(char **command)
+{
+	int i = 0;
+
+	(void)command;
+
+	while (environ[i])
+	{
+		_put_str(environ[i++]);
+		_putchar('\n');
+	}
+}
+
+/**
  * handle_builtin - handles shell builtin function
  * example: exit, cd, ...etc
  * @command: command to compare with
@@ -19,16 +36,17 @@ void exit_shell(char **command)
 
 int handle_builtin(char **command)
 {
-	char *builtin_commands[] = {"exit", NULL};
+	builtin_t builtin[] = {{"exit", exit_shell},
+												 {"env", print_env},
+												 {NULL, NULL}};
 
-	void (*functions[])(char **command) = {exit_shell};
 	int i, flag = 0;
 
-	for (i = 0; builtin_commands[i]; i++)
+	for (i = 0; builtin[i].command; i++)
 	{
-		if (_strcmp(command[0], builtin_commands[i]) == 0)
+		if (_strcmp(command[0], builtin[i].command) == 0)
 		{
-			(functions[i])(command);
+			(builtin[i].command_f)(command);
 			flag = 1;
 			break;
 		}

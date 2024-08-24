@@ -31,15 +31,13 @@ char **get_command(int *exit_code)
 	if (readInputSize == -1)
 	{
 		free(inputBuffer);
-		free(command);
 		*exit_code = EXIT_SUCCESS;
 		exit(EXIT_SUCCESS);
 	}
 
-	if (!inputBuffer)
+	if (inputBuffer[0] == '\n')
 	{
 		free(inputBuffer);
-		_free_dbl_ptr(command);
 		return (NULL);
 	}
 
@@ -49,7 +47,6 @@ char **get_command(int *exit_code)
 	if (command == NULL || command[0] == NULL)
 	{
 		free(inputBuffer);
-		_free_dbl_ptr(command);
 		return (NULL);
 	}
 
@@ -72,6 +69,7 @@ void exec_command(char **command, char *shell_name, int *exit_code)
 	if (pid == -1)
 	{
 		perror("Fork");
+		_free_dbl_ptr(command);
 		*exit_code = EXIT_FAILURE;
 		exit(EXIT_FAILURE);
 	}
@@ -86,6 +84,7 @@ void exec_command(char **command, char *shell_name, int *exit_code)
 	else
 	{
 		wait(&wait_status);
+		_free_dbl_ptr(command);
 	}
 }
 
@@ -93,7 +92,6 @@ void exec_command(char **command, char *shell_name, int *exit_code)
  * start_loop - runs the app in interactive mode
  * @shell_name: name of the shell to print
  * @exit_code: pointer to exit code variable
- * Return: 1 if success , 0 if fails
  */
 
 void start_loop(char *shell_name, int *exit_code)
@@ -122,6 +120,12 @@ void start_loop(char *shell_name, int *exit_code)
 		if (access(command[0], X_OK | F_OK) == 0)
 		{
 			exec_command(command, shell_name, exit_code);
+			continue;
+		}
+		else
+		{
+			not_found(command[0]);
+			_free_dbl_ptr(command);
 			continue;
 		}
 	}

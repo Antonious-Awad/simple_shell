@@ -113,10 +113,7 @@ void start_loop(char *shell_name, int *exit_code)
 		}
 		isInPath = is_in_path(command, exit_code, shell_name);
 		if (isInPath)
-		{
-			_free_dbl_ptr(command);
 			continue;
-		}
 		if (access(command[0], X_OK | F_OK) == 0)
 		{
 			exec_command(command, shell_name, exit_code);

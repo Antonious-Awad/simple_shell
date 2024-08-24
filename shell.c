@@ -32,7 +32,10 @@ int main(int __attribute__((unused)) argc, char **argv)
 				_free_dbl_ptr(command);
 				exit_code = 127;
 			}
+			_free_dbl_ptr(command);
 		}
+		_free_dbl_ptr(command);
+		return (0);
 	}
 
 	return (exit_code);

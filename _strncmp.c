@@ -8,7 +8,7 @@
  * Return: difference between ascii characters of the 2 strings
  */
 
-int _strncmp(char *s1, char *s2, size_t n)
+int _strncmp(const char *s1, const char *s2, size_t n)
 {
 	if (n == 0)
 		return (0);

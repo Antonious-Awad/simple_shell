@@ -42,9 +42,11 @@ char **get_command(int *exit_code)
 	add_null(inputBuffer);
 	command = tokenize(inputBuffer, ' ');
 
+	free(inputBuffer);
+
 	if (command == NULL || command[0] == NULL)
 		return (NULL);
-	free(inputBuffer);
+
 	return (command);
 }
 
@@ -108,7 +110,10 @@ void start_loop(char *shell_name, int *exit_code)
 		if (access(command[0], X_OK | F_OK) == 0)
 		{
 			exec_command(command, shell_name, exit_code);
-			continue;
+		}
+		else
+		{
+			_free_dbl_ptr(command);
 		}
 	}
 }

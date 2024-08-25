@@ -10,7 +10,7 @@ void free_path(path_t *head)
 	path_t *temp;
 
 	temp = head;
-	while (!temp)
+	while (temp)
 	{
 		temp = temp->next;
 		free(head->dir);
@@ -35,6 +35,11 @@ path_t *add_node_end(path_t **head, const char *str)
 		return (NULL);
 
 	new_node->dir = strdup(str);
+	if (!new_node->dir)
+	{
+		free(new_node);
+		return (NULL);
+	}
 
 	current = *head;
 

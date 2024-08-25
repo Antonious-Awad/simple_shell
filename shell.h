@@ -11,6 +11,8 @@ extern char **environ;
 #include <unistd.h>
 #include <fcntl.h>
 
+#define BUFF_SIZE 1024
+
 /**
  * struct path - path structure for usage in a singly linked list
  * @dir: directory string in path array
@@ -22,18 +24,44 @@ typedef struct path
 	struct path *next;
 } path_t;
 
-void start_loop(char *shell_name, int *exit_code);
+/**
+ * struct builtin - builtin object containing its corresponding function
+ * @command: command name
+ * @command_f: command function
+ */
+typedef struct builtin
+{
+	char *command;
+	void (*command_f)(char **command);
+} builtin_t;
+
+/* Strings */
+int _strlen(const char *s);
+int _strcmp(const char *s1, const char *s2);
+int _strncmp(const char *s1, const char *s2, size_t n);
+char *_strcpy(char *dest, const char *src);
+char *_strdup(const char *str);
+char *_strcat(char *dest, const char *src);
+char **tokenize(char *str, char delim);
+
+/* STDOUT */
 int _putchar(char c);
 int _put_str(char *str);
-int _strlen(char *s);
-char *_strcpy(char *dest, char *src);
-int _strcmp(char *s1, char *s2);
-int _strncmp(char *s1, char *s2, size_t n);
-char **tokenize(char *str, char delim);
+
+/* Memory */
 void _free_dbl_ptr(char **str);
+void free_path(path_t *head);
+
+/* Errors */
+void not_found(char *command_name);
+
+/* Shell */
+void start_loop(char *shell_name, int *exit_code);
 char **get_command(int *exit_code);
 char *_getenv(char *env_var);
 int handle_builtin(char **command);
+path_t *init_path(void);
+int is_in_path(char **command, int *exit_code, char *shell_name);
 void exec_command(char **command, char *shell_name, int *exit_code);
 
 #endif

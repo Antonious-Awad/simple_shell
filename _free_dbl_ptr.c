@@ -8,7 +8,7 @@ void _free_dbl_ptr(char **ptr)
 {
 	int i = 0;
 
-	if (ptr[i] != NULL)
+	if (!ptr)
 		return;
 
 	while (ptr[i] != NULL)

@@ -30,23 +30,27 @@ char **get_command(int *exit_code)
 	readInputSize = getline(&inputBuffer, &read_len, stdin);
 	if (readInputSize == -1)
 	{
-		if (inputBuffer)
-			free(inputBuffer);
+		free(inputBuffer);
 		*exit_code = EXIT_SUCCESS;
 		exit(EXIT_SUCCESS);
 	}
 
-	if (!inputBuffer)
+	if (inputBuffer[0] == '\n')
+	{
+		free(inputBuffer);
 		return (NULL);
+	}
 
 	add_null(inputBuffer);
 	command = tokenize(inputBuffer, ' ');
 
-	free(inputBuffer);
-
 	if (command == NULL || command[0] == NULL)
+	{
+		free(inputBuffer);
 		return (NULL);
+	}
 
+	free(inputBuffer);
 	return (command);
 }
 
@@ -65,6 +69,7 @@ void exec_command(char **command, char *shell_name, int *exit_code)
 	if (pid == -1)
 	{
 		perror("Fork");
+		_free_dbl_ptr(command);
 		*exit_code = EXIT_FAILURE;
 		exit(EXIT_FAILURE);
 	}
@@ -87,13 +92,12 @@ void exec_command(char **command, char *shell_name, int *exit_code)
  * start_loop - runs the app in interactive mode
  * @shell_name: name of the shell to print
  * @exit_code: pointer to exit code variable
- * Return: 1 if success , 0 if fails
  */
 
 void start_loop(char *shell_name, int *exit_code)
 {
 	char **command;
-	int isBuiltin;
+	int isBuiltin, isInPath;
 
 	while (1)
 	{
@@ -107,13 +111,19 @@ void start_loop(char *shell_name, int *exit_code)
 			_free_dbl_ptr(command);
 			continue;
 		}
+		isInPath = is_in_path(command, exit_code, shell_name);
+		if (isInPath)
+			continue;
 		if (access(command[0], X_OK | F_OK) == 0)
 		{
 			exec_command(command, shell_name, exit_code);
+			continue;
 		}
 		else
 		{
+			not_found(command[0]);
 			_free_dbl_ptr(command);
+			continue;
 		}
 	}
 }

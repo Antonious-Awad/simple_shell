@@ -16,7 +16,7 @@ int count_tokens(char *str, char delim)
 
 		if (str[i] == delim || str[i + 1] == '\0')
 		{
-			if (str[i - 1] != ' ')
+			if (str[i - 1] != delim)
 				counter++;
 		}
 	}
@@ -50,11 +50,10 @@ void allocate_memory(char **str_arr, int token_count, char *str, char delim)
 			str_arr[counter] = malloc((word_len + 1) * sizeof(char));
 			if (!str_arr[counter])
 			{
-				while (counter-- > 0)
-					free(str_arr[counter]);
-				free(str_arr);
+				_free_dbl_ptr(str_arr);
 				exit(EXIT_FAILURE);
 			}
+
 			word_len = 0;
 			counter++;
 		}
@@ -64,7 +63,7 @@ void allocate_memory(char **str_arr, int token_count, char *str, char delim)
 /**
  * tokenize - splits a string into an array of strings
  * @str: str to split
- * @delim: delimiter
+ * @delim: delimeter
  * Return: array of strings
  */
 
@@ -74,21 +73,28 @@ char **tokenize(char *str, char delim)
 	char **str_arr;
 
 	if (str == NULL || *str == '\0')
+	{
+		free(str);
 		return (NULL);
+	}
 
 	tokens_counter = count_tokens(str, delim);
 
 	if (!tokens_counter)
+	{
+		free(str);
 		return (NULL);
+	}
 
 	str_arr = malloc((tokens_counter + 1) * sizeof(char *));
 	if (!str_arr)
+	{
+		free(str);
 		return (NULL);
-
+	}
 	allocate_memory(str_arr, tokens_counter, str, delim);
 
 	for (i = 0; str[i] != '\0'; i++)
-	{
 		if (str[i] != delim)
 		{
 			str_arr[arr_itr][token_itr++] = str[i];
@@ -98,7 +104,6 @@ char **tokenize(char *str, char delim)
 				token_itr = 0;
 			}
 		}
-	}
 
 	str_arr[arr_itr] = NULL;
 	return (str_arr);

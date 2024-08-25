@@ -11,6 +11,8 @@ extern char **environ;
 #include <unistd.h>
 #include <fcntl.h>
 
+#define BUFF_SIZE 1024
+
 /**
  * struct path - path structure for usage in a singly linked list
  * @dir: directory string in path array
@@ -21,6 +23,17 @@ typedef struct path
 	char *dir;
 	struct path *next;
 } path_t;
+
+/**
+ * struct builtin - builtin object containing its corresponding function
+ * @command: command name
+ * @command_f: command function
+ */
+typedef struct builtin
+{
+	char *command;
+	void (*command_f)(char **command);
+} builtin_t;
 
 /* Strings */
 int _strlen(const char *s);
@@ -38,6 +51,9 @@ int _put_str(char *str);
 /* Memory */
 void _free_dbl_ptr(char **str);
 void free_path(path_t *head);
+
+/* Errors */
+void not_found(char *command_name);
 
 /* Shell */
 void start_loop(char *shell_name, int *exit_code);

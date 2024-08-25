@@ -36,6 +36,7 @@ int is_in_path(char **command, int *exit_code, char *shell_name)
 			}
 			else
 			{
+				/* handle permission denied */
 				free(full_path);
 				free_path(head);
 				*exit_code = 126;
@@ -46,6 +47,7 @@ int is_in_path(char **command, int *exit_code, char *shell_name)
 	}
 	if (is_found == 0)
 	{
+		not_found(command[0]);
 		*exit_code = 127;
 	}
 	free_path(head);

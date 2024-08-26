@@ -15,6 +15,7 @@ void non_interactive(char *shell_name, int *exit_code)
 	{
 		if (command == NULL || command[0] == NULL)
 		{
+			_free_dbl_ptr(command);
 			exit(EXIT_SUCCESS);
 		}
 		isBuiltin = handle_builtin(command);
@@ -32,15 +33,14 @@ void non_interactive(char *shell_name, int *exit_code)
 		if (access(command[0], X_OK | F_OK) == 0)
 		{
 			exec_command(command, shell_name, exit_code);
+			_free_dbl_ptr(command);
 		}
 		else
 		{
-			not_found(command[0]);
 			_free_dbl_ptr(command);
+			not_found(command[0]);
 		}
-		_free_dbl_ptr(command);
 	}
-	_free_dbl_ptr(command);
 }
 /**
  * main - Entry point for the shell application

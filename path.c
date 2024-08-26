@@ -26,7 +26,7 @@ void free_path(path_t *head)
 	path_t *temp;
 
 	temp = head;
-	while (!temp)
+	while (temp)
 	{
 		temp = temp->next;
 		free(head->dir);
@@ -53,6 +53,13 @@ path_t *add_node_end(path_t **head, const char *str)
 
 	new_node->dir = _strdup(str);
 	new_node->next = NULL;
+
+	if (!new_node->dir)
+	{
+		free(new_node->dir);
+		free(new_node);
+		return (NULL);
+	}
 
 	current = *head;
 
@@ -91,5 +98,6 @@ path_t *init_path(void)
 		head = add_node_end(&head, path_arr[i]);
 	}
 
+	_free_dbl_ptr(path_arr);
 	return (head);
 }

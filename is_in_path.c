@@ -15,7 +15,6 @@ int is_in_path(char **command, int *exit_code, char *shell_name)
 	char *full_path;
 
 	head = path_list;
-
 	while (path_list)
 	{
 		full_path = malloc((_strlen(command[0]) + 1) +

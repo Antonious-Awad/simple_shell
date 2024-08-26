@@ -11,9 +11,11 @@ void _free_dbl_ptr(char **ptr)
 	if (!ptr)
 		return;
 
-	while (ptr[i] != NULL)
+	while (ptr[i])
 	{
-		free(ptr[i++]);
+		if (ptr[i])
+			free(ptr[i]);
+		i++;
 	}
 	free(ptr);
 }

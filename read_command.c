@@ -25,14 +25,14 @@ char **get_command(int *exit_code)
 {
 	char **command = NULL, *inputBuffer = NULL;
 	ssize_t readInputSize;
-	size_t read_len;
+	size_t read_len = 0;
 
 	readInputSize = getline(&inputBuffer, &read_len, stdin);
 	if (readInputSize == -1)
 	{
 		free(inputBuffer);
 		*exit_code = EXIT_SUCCESS;
-		exit(EXIT_SUCCESS);
+		return (NULL);
 	}
 
 	if (inputBuffer[0] == '\n')
@@ -78,14 +78,12 @@ void exec_command(char **command, char *shell_name, int *exit_code)
 		if (execve(command[0], command, environ) == -1)
 		{
 			perror(shell_name);
+			_free_dbl_ptr(command);
 			exit(EXIT_FAILURE);
 		}
 	}
 	else
-	{
 		wait(&wait_status);
-		_free_dbl_ptr(command);
-	}
 }
 
 /**
@@ -104,7 +102,10 @@ void start_loop(char *shell_name, int *exit_code)
 		_put_str("($) ");
 		command = get_command(exit_code);
 		if (command == NULL || command[0] == NULL)
+		{
+			_free_dbl_ptr(command);
 			continue;
+		}
 		isBuiltin = handle_builtin(command);
 		if (isBuiltin == 1)
 		{
@@ -113,7 +114,10 @@ void start_loop(char *shell_name, int *exit_code)
 		}
 		isInPath = is_in_path(command, exit_code, shell_name);
 		if (isInPath)
+		{
+			_free_dbl_ptr(command);
 			continue;
+		}
 		if (access(command[0], X_OK | F_OK) == 0)
 		{
 			exec_command(command, shell_name, exit_code);

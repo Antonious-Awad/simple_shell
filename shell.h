@@ -51,6 +51,7 @@ int _put_str(char *str);
 /* Memory */
 void _free_dbl_ptr(char **str);
 void free_path(path_t *head);
+void free_string_and_tokens(char *str, char **tokens);
 
 /* Errors */
 void not_found(char *command_name);

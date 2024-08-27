@@ -43,6 +43,7 @@ char *_strcpy(char *dest, const char *src);
 char *_strdup(const char *str);
 char *_strcat(char *dest, const char *src);
 char **tokenize(char *str, char delim);
+char *_strchr(char *s, char c);
 
 /* STDOUT */
 int _putchar(char c);

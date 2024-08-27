@@ -53,7 +53,7 @@ void _free_dbl_ptr(char **str);
 void free_path(path_t *head);
 
 /* Errors */
-void not_found(char *command_name);
+void not_found(char *command_name, char *shell_name);
 
 /* Shell */
 void start_loop(char *shell_name, int *exit_code);

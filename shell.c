@@ -37,8 +37,9 @@ void non_interactive(char *shell_name, int *exit_code)
 		}
 		else
 		{
+			*exit_code = 127;
+			not_found(command[0], shell_name);
 			_free_dbl_ptr(command);
-			not_found(command[0]);
 		}
 	}
 }
@@ -51,7 +52,7 @@ void non_interactive(char *shell_name, int *exit_code)
 
 int main(int __attribute__((unused)) argc, char **argv)
 {
-	static int exit_code;
+	int exit_code;
 	int isInteractive = 0;
 
 	if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))

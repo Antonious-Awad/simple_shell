@@ -27,11 +27,11 @@ char **get_command(int *exit_code)
 	ssize_t readInputSize;
 	size_t read_len = 0;
 
+	(void)exit_code;
 	readInputSize = getline(&inputBuffer, &read_len, stdin);
 	if (readInputSize == -1)
 	{
 		free(inputBuffer);
-		*exit_code = EXIT_SUCCESS;
 		return (NULL);
 	}
 
@@ -128,7 +128,7 @@ void start_loop(char *shell_name, int *exit_code)
 		}
 		else
 		{
-			not_found(command[0]);
+			not_found(command[0], shell_name);
 			_free_dbl_ptr(command);
 			continue;
 		}

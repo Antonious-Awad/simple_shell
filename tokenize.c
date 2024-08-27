@@ -13,11 +13,11 @@ int count_tokens(char *str, char delim)
 
 	for (i = 0; str[i] != '\0'; i++)
 	{
-
 		if (str[i] == delim || str[i + 1] == '\0')
 		{
-			if (str[i - 1] != delim)
-				counter++;
+			if (i != 0)
+				if (str[i - 1] != delim)
+					counter++;
 		}
 	}
 	return (counter);

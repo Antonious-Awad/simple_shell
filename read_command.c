@@ -83,7 +83,10 @@ void exec_command(char **command, char *shell_name, int *exit_code)
 		}
 	}
 	else
+	{
 		wait(&wait_status);
+		*exit_code = WEXITSTATUS(wait_status);
+	}
 }
 
 /**
@@ -106,7 +109,7 @@ void start_loop(char *shell_name, int *exit_code)
 			_free_dbl_ptr(command);
 			continue;
 		}
-		isBuiltin = handle_builtin(command);
+		isBuiltin = handle_builtin(command, exit_code);
 		if (isBuiltin == 1)
 		{
 			_free_dbl_ptr(command);

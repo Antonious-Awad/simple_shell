@@ -18,7 +18,7 @@ void non_interactive(char *shell_name, int *exit_code)
 			_free_dbl_ptr(command);
 			exit(EXIT_SUCCESS);
 		}
-		isBuiltin = handle_builtin(command);
+		isBuiltin = handle_builtin(command, exit_code);
 		if (isBuiltin == 1)
 		{
 			_free_dbl_ptr(command);
@@ -60,10 +60,7 @@ int main(int __attribute__((unused)) argc, char **argv)
 	if (isInteractive)
 		start_loop(argv[0], &exit_code);
 	else
-	{
 		non_interactive(argv[0], &exit_code);
-		return (0);
-	}
 
 	return (exit_code);
 }

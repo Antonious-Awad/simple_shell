@@ -51,6 +51,7 @@ void allocate_memory(char **str_arr, int token_count, char *str, char delim)
 			if (!str_arr[counter])
 			{
 				_free_dbl_ptr(str_arr);
+				free(str);
 				exit(EXIT_FAILURE);
 			}
 
@@ -82,11 +83,10 @@ char **tokenize(char *str, char delim)
 
 	str_arr = malloc((tokens_counter + 1) * sizeof(char *));
 	if (!str_arr)
-	{
-		free(str);
-		return (NULL);
-	}
-
+		{
+			free(str);
+			return (NULL);
+		}
 	allocate_memory(str_arr, tokens_counter, str, delim);
 
 	for (i = 0; str[i] != '\0'; i++)

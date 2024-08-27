@@ -34,6 +34,7 @@ void non_interactive(char *shell_name, int *exit_code)
 		if (access(command[0], X_OK | F_OK) == 0)
 		{
 			exec_command(command, shell_name, exit_code);
+			_free_dbl_ptr(command);
 		}
 		else
 		{

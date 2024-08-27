@@ -15,7 +15,6 @@ int is_in_path(char **command, int *exit_code, char *shell_name)
 	char *full_path;
 
 	head = path_list;
-
 	while (path_list)
 	{
 		full_path = malloc((_strlen(command[0]) + 1) +
@@ -30,6 +29,7 @@ int is_in_path(char **command, int *exit_code, char *shell_name)
 			{
 				free(command[0]);
 				command[0] = full_path;
+				free_path(head);
 				exec_command(command, shell_name, exit_code);
 				is_found = 1;
 				break;
@@ -37,8 +37,6 @@ int is_in_path(char **command, int *exit_code, char *shell_name)
 			else
 			{
 				/* handle permission denied */
-				free(full_path);
-				free_path(head);
 				*exit_code = 126;
 			}
 		}
@@ -47,9 +45,8 @@ int is_in_path(char **command, int *exit_code, char *shell_name)
 	}
 	if (is_found == 0)
 	{
-		not_found(command[0]);
+		free_path(head);
 		*exit_code = 127;
 	}
-	free_path(head);
 	return (is_found);
 }

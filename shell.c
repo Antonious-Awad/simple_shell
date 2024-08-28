@@ -55,7 +55,7 @@ void non_interactive(char *shell_name, int *exit_code)
 
 int main(int __attribute__((unused)) argc, char **argv)
 {
-	int exit_code;
+	static int exit_code;
 	int isInteractive = 0;
 
 	if (isatty(STDIN_FILENO) && isatty(STDERR_FILENO))

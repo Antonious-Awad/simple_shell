@@ -68,3 +68,5 @@ $ exit
 
 🚀 Ready to Dive In?
 Simple_Shell is your playground. Go ahead, experiment, break things, and then fix them—because that’s what coding is all about!
+
+**Happy coding! May your terminal always be bug-free and your shell scripts ever powerful.**

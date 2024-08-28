@@ -32,7 +32,7 @@ typedef struct path
 typedef struct builtin
 {
 	char *command;
-	void (*command_f)(char **command);
+	void (*command_f)(char **command, int *exit_code);
 } builtin_t;
 
 /* Strings */
@@ -43,6 +43,7 @@ char *_strcpy(char *dest, const char *src);
 char *_strdup(const char *str);
 char *_strcat(char *dest, const char *src);
 char **tokenize(char *str, char delim);
+char *_strchr(char *s, char c);
 
 /* STDOUT */
 int _putchar(char c);
@@ -53,13 +54,13 @@ void _free_dbl_ptr(char **str);
 void free_path(path_t *head);
 
 /* Errors */
-void not_found(char *command_name);
+void not_found(char *command_name, char *shell_name);
 
 /* Shell */
 void start_loop(char *shell_name, int *exit_code);
-char **get_command(int *exit_code);
+char **get_command(int *exit_code, int *isEOF);
 char *_getenv(char *env_var);
-int handle_builtin(char **command);
+int handle_builtin(char **command, int *exit_code);
 path_t *init_path(void);
 int is_in_path(char **command, int *exit_code, char *shell_name);
 void exec_command(char **command, char *shell_name, int *exit_code);

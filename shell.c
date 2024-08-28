@@ -9,26 +9,32 @@
 void non_interactive(char *shell_name, int *exit_code)
 {
 	char **command;
-	int isBuiltin, isInPath;
+	int isBuiltin, isInPath, isEOF = 0;
 
-	while ((command = get_command(exit_code)) != NULL)
+	while (1)
 	{
+		command = get_command(exit_code, &isEOF);
 		if (command == NULL || command[0] == NULL)
 		{
 			_free_dbl_ptr(command);
-			exit(EXIT_SUCCESS);
+			if (isEOF)
+				break;
+			*exit_code = EXIT_SUCCESS;
+			continue;
 		}
-		isBuiltin = handle_builtin(command);
+		isBuiltin = handle_builtin(command, exit_code);
 		if (isBuiltin == 1)
 		{
 			_free_dbl_ptr(command);
-			exit(EXIT_SUCCESS);
+			*exit_code = EXIT_SUCCESS;
+			continue;
 		}
 		isInPath = is_in_path(command, exit_code, shell_name);
 		if (isInPath)
 		{
 			_free_dbl_ptr(command);
-			exit(EXIT_SUCCESS);
+			*exit_code = EXIT_SUCCESS;
+			continue;
 		}
 		if (access(command[0], X_OK | F_OK) == 0)
 		{
@@ -37,8 +43,9 @@ void non_interactive(char *shell_name, int *exit_code)
 		}
 		else
 		{
+			*exit_code = 127;
+			not_found(command[0], shell_name);
 			_free_dbl_ptr(command);
-			not_found(command[0]);
 		}
 	}
 }
@@ -60,10 +67,7 @@ int main(int __attribute__((unused)) argc, char **argv)
 	if (isInteractive)
 		start_loop(argv[0], &exit_code);
 	else
-	{
 		non_interactive(argv[0], &exit_code);
-		return (0);
-	}
 
 	return (exit_code);
 }

@@ -10,14 +10,18 @@
 int count_tokens(char *str, char delim)
 {
 	int i, counter = 0;
+	int in_token = 0;
 
 	for (i = 0; str[i] != '\0'; i++)
 	{
-
-		if (str[i] == delim || str[i + 1] == '\0')
+		if (str[i] != delim && str[i] != '\n' && !in_token)
 		{
-			if (str[i - 1] != delim)
-				counter++;
+			in_token = 1;
+			counter++;
+		}
+		else if ((str[i] == delim || str[i] == '\n') && in_token)
+		{
+			in_token = 0;
 		}
 	}
 	return (counter);
@@ -42,21 +46,23 @@ void allocate_memory(char **str_arr, int token_count, char *str, char delim)
 		if (counter == token_count)
 			return;
 
-		if (str[i] != delim)
+		if (str[i] != delim && str[i] != '\n')
 			word_len++;
 
-		if (str[i + 1] == delim || str[i + 1] == '\0')
+		if (str[i + 1] == delim || str[i + 1] == '\n' || str[i + 1] == '\0')
 		{
-			str_arr[counter] = malloc((word_len + 1) * sizeof(char));
-			if (!str_arr[counter])
+			if (word_len > 0)
 			{
-				_free_dbl_ptr(str_arr);
-				free(str);
-				exit(EXIT_FAILURE);
+				str_arr[counter] = malloc((word_len + 1) * sizeof(char));
+				if (!str_arr[counter])
+				{
+					_free_dbl_ptr(str_arr);
+					free(str);
+					exit(EXIT_FAILURE);
+				}
+				word_len = 0;
+				counter++;
 			}
-
-			word_len = 0;
-			counter++;
 		}
 	}
 }

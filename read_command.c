@@ -17,11 +17,12 @@ void add_null(char *inputBuffer)
  * get_command - reads  string from stdin
  * and creates an array of the command with its
  * @exit_code: exit code pointer
+ * @isEOF: flag to check if end of stream is reached
  *
  * Return: array of strings of the command with its arguments
  */
 
-char **get_command(int *exit_code)
+char **get_command(int *exit_code, int *isEOF)
 {
 	char **command = NULL, *inputBuffer = NULL;
 	ssize_t readInputSize;
@@ -31,6 +32,7 @@ char **get_command(int *exit_code)
 	readInputSize = getline(&inputBuffer, &read_len, stdin);
 	if (readInputSize == -1)
 	{
+		*isEOF = 1;
 		free(inputBuffer);
 		return (NULL);
 	}
@@ -98,15 +100,17 @@ void exec_command(char **command, char *shell_name, int *exit_code)
 void start_loop(char *shell_name, int *exit_code)
 {
 	char **command;
-	int isBuiltin, isInPath;
+	int isBuiltin, isInPath, isEOF = 0;
 
 	while (1)
 	{
 		_put_str("($) ");
-		command = get_command(exit_code);
+		command = get_command(exit_code, &isEOF);
 		if (command == NULL || command[0] == NULL)
 		{
 			_free_dbl_ptr(command);
+			if (isEOF)
+				break;
 			continue;
 		}
 		isBuiltin = handle_builtin(command, exit_code);

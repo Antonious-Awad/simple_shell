@@ -58,7 +58,7 @@ void not_found(char *command_name, char *shell_name);
 
 /* Shell */
 void start_loop(char *shell_name, int *exit_code);
-char **get_command(int *exit_code);
+char **get_command(int *exit_code, int *isEOF);
 char *_getenv(char *env_var);
 int handle_builtin(char **command, int *exit_code);
 path_t *init_path(void);

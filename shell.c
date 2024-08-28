@@ -9,13 +9,16 @@
 void non_interactive(char *shell_name, int *exit_code)
 {
 	char **command;
-	int isBuiltin, isInPath;
+	int isBuiltin, isInPath, isEOF = 0;
 
-	while ((command = get_command(exit_code)) != NULL)
+	while (1)
 	{
+		command = get_command(exit_code, &isEOF);
 		if (command == NULL || command[0] == NULL)
 		{
 			_free_dbl_ptr(command);
+			if (isEOF)
+				break;
 			*exit_code = EXIT_SUCCESS;
 			continue;
 		}

@@ -3,24 +3,15 @@
 /**
  * not_found - prints an error if command isn't found
  * @command_name: name of the command that isn't found
+ * @shell_name: name of the program
  */
 
-void not_found(char *command_name)
+void not_found(char *command_name, char *shell_name)
 {
-	char **err_buffer;
-	int i = 0;
-
-	err_buffer = malloc(sizeof(char *) * 4);
-
-	err_buffer[0] = command_name;
-	err_buffer[1] = ":";
-	err_buffer[2] = "command not found\n";
-	err_buffer[3] = NULL;
-
-	while (err_buffer[i])
-	{
-		write(STDERR_FILENO, err_buffer[i], _strlen(err_buffer[i]));
-		i++;
-	}
-	free(err_buffer);
+	write(STDERR_FILENO, shell_name, _strlen(shell_name));
+	write(STDERR_FILENO, ": ", 2);
+	write(STDERR_FILENO, "1", 1);
+	write(STDERR_FILENO, ": ", 2);
+	write(STDERR_FILENO, command_name, _strlen(command_name));
+	write(STDERR_FILENO, ": not found\n", 12);
 }

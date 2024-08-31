@@ -2,6 +2,9 @@
 
 Welcome to **Simple_Shell**, where the magic of UNIX meets simplicity! This project is your personal gateway to understanding how a basic shell operates. It's lightweight, it's powerful, and it's all yours to explore and expand!
 
+## Demo
+[demo.webm](https://github.com/user-attachments/assets/2c3d71b6-c2c0-41e7-a719-0f056d5f29d2)
+
 ##  What's This All About?
 
 Simple_Shell is a miniature version of the UNIX command-line interface you're probably familiar with. Imagine having your own little bash shell, but it's stripped down to the essentials. Whether you're typing in commands manually or letting a script do the work, Simple_Shell has got you covered.
@@ -54,6 +57,7 @@ $ ./simple_shell
 $ ls -l
 $ /bin/echo "Hello, World!"
 $ exit
+```
 
 
 ## Contributors
